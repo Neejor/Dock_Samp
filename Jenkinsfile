@@ -5,9 +5,6 @@ pipeline {
      args '-p 3000:3000'
     }
   }
-  tools {
-      nodejs: "16.4.2"
-  }
   environment {
     CI = 'true'
     HOME = '.'
@@ -16,31 +13,25 @@ pipeline {
   stages {
     stage('Install Packages') {
       steps {
-        sh 'npm install'
+        nodejs(nodeJSInstallationName: "node"){
+        sh 'npm install'}
       }
     }
     stage('Test and Build') {
       parallel {
         stage('Run Tests') {
           steps {
-            sh 'npm run test'
+            nodejs(nodeJSInstallationName: "node"){
+            sh 'npm run test'}
           }
         }
         stage('Create Build Artifacts') {
           steps {
-            sh 'npm run build'
+              nodejs(nodeJSInstallationName: "node"){
+            sh 'npm run build'}
           }
         }
       }
     }
-
-stage('Production') {
-  steps {
-    withAWS(region:'ap-south-1',credentials:'Neejor') {
-    s3Delete(bucket: 'pipeline-rest-bucket', path:'**/*')
-    s3Upload(bucket: 'pipeline-rest-bucket', workingDir:'build', includePathPattern:'**/*');
-            }
-          }
-        }
     }
 }
