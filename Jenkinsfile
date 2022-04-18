@@ -11,18 +11,18 @@ pipeline {
     npm_config_cache = 'npm-cache'
   }
   stages {
-    stage('Install Packages') {
-      steps {
-        nodejs(nodeJSInstallationName: "node"){
-        sh 'npm install'}
-      }
-    }
     stage('Version') {
         steps {
             nodejs(nodeJSInstallationName: "node") {
                 sh 'node -v'
             }
         }
+    }
+    stage('Install Packages') {
+      steps {
+        nodejs(nodeJSInstallationName: "node"){
+        sh 'npm install'}
+      }
     }
     stage('Test and Build') {
       parallel {
