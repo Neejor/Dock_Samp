@@ -17,6 +17,13 @@ pipeline {
         sh 'npm install'}
       }
     }
+    stage('Version') {
+        steps {
+            nodejs(nodeJSInstallationName: "node") {
+                sh 'node -v'
+            }
+        }
+    }
     stage('Test and Build') {
       parallel {
         stage('Run Tests') {
